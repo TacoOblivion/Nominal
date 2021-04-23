@@ -13,7 +13,7 @@
 #include <ios>
 #include <iosfwd>
 //#include <bits/ios_base.h>
-#include "UTF8OpenMode.hpp"
+#include "UTF8OpenMode.h"
 
 class UTF8File
 {

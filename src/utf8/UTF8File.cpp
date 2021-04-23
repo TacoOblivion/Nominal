@@ -1,5 +1,5 @@
 
-#include "UTF8File.hpp"
+#include "UTF8File.h"
 
 UTF8File::UTF8File(const char* filePath)
 {
@@ -52,10 +52,12 @@ wchar_t* UTF8File::ReadAll()
 
 int64_t UTF8File::_GetFileBufferSize()
 {
-	_file.open(_path, std::ios_base::in);
+	std::wifstream in(_path, std::wifstream::ate | std::wifstream::binary);
+	return (int64_t)in.tellg() - 1LL;
+	/*_file.open(_path, std::ios_base::in);
 	_file.imbue(std::locale(_file.getloc(), _codeConverter));
 	_file.seekg(0, (std::ios_base::seekdir)0); // ios::beg keeps causing red underlines, so 0 for the 2nd argument
-
+	
 	int64_t i = -1;
 	while (!_file.eof())
 	{
@@ -67,5 +69,5 @@ int64_t UTF8File::_GetFileBufferSize()
 	//Serial.println("");
 	//Serial.print("WSize: ");
 	//Serial.println((int32_t)i);
-	return i;
+	return i;*/
 }

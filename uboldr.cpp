@@ -10,10 +10,11 @@
 #include <cstdlib>
 */
 
-//#include "src/utf8/UTF8File.h"
+#include "src/utf8/UTF8File.h"
 #include "src/collections/LinkedList.h"
-//#include "src/uboldr/uScanner.h"
+#include "src/uboldr/uScanner.h"
 #include "src/uboldr/uToken.h"
+#include "src/uboldr/uTokenType.h"
 #include <iostream>
 
 using namespace std;
@@ -66,8 +67,8 @@ int main()
 
 	//file.close();
 
-	/*
-	UTF8File file("test.ubr");
+	
+	/*UTF8File file("test2.ubr");
 	file.Open(UTF8OpenMode::Read);
 	auto buffer = file.ReadAll();
 	
@@ -80,16 +81,53 @@ int main()
 		wchar_t chr = buffer[i++];
 		
 		std::cout << (char)chr;
+	}*/
+
+	auto scanner = new uScanner("test2.ubr");
+	auto tokens = scanner->Scan();
+
+	auto listItem = tokens->FirstItem();
+	while (listItem != nullptr)
+	{
+		std::cout << static_cast<int32_t>(listItem->Value->Type);
+
+		switch (listItem->Value->Type)
+		{
+		case uScannerTokenType::IntLiteral:
+		{
+			auto token = dynamic_cast<uToken<int64_t>*>(listItem->Value);
+			std::cout << ": " << token->Data;
+		}
+			break;
+		case uScannerTokenType::Identifier:
+		{
+			auto token = dynamic_cast<uToken<std::wstring>*>(listItem->Value);
+			std::cout << ": ";
+			for (wchar_t c : token->Data)
+				std::cout << (char)c;
+		}
+			break;
+		case uScannerTokenType::Symbol:
+		{
+			auto token = dynamic_cast<uToken<uParserTokenType>*>(listItem->Value);
+			std::cout << ": " << (int32_t)token->Data;
+		}
+			break;
+		}
+
+		std::cout << std::endl;
+
+		listItem = listItem->NextItem;
 	}
-	*/
+	
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	
-	auto test0 = new uToken<std::string, int32_t>();
+	/*auto test0 = new uToken<std::string, int32_t>();
 	test0->Data = "Hello World";
 	void* test1 = (void*)(test0);
 	uToken<std::string, int32_t>* test2 = (uToken<std::string, int32_t>*)test1;
 
-	cout << test2->Data;
+	cout << test2->Data;*/
 	
 	getchar();
 }

@@ -1,25 +1,24 @@
 #pragma once
 
 #include "../basic/Types.h"
-#include "uTokenType.h"
+#include "uScannerTokenType.h"
 
-template <typename V>
 struct uAbstractToken : public object_t
 {
-	V LineIndex = 0;
-	V CharIndex = 0;
-	uTokenType Type = uTokenType::Unknown;
+	int64_t LineIndex = -1;
+	int32_t CharIndex = -1;
+	uScannerTokenType Type = uScannerTokenType::Unknown;
 
 	uAbstractToken() {}
 	virtual ~uAbstractToken() {};
 };
 
-template <typename T, typename V>
-struct uToken : public uAbstractToken<V>
+template <typename T>
+struct uToken : public uAbstractToken
 {
 	T Data;
 
-	uToken() {}
+	uToken(T data) : Data(data) {}
 	virtual ~uToken() {};
 };
 

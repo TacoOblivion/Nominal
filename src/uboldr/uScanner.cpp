@@ -4,14 +4,14 @@
 #include "uScannerTokenType.h"
 #include "uTokenType.h"
 
-inline uScanner::uScanner(std::string path) : _file(path), _path(path), _contents(), _pos()
+uScanner::uScanner(std::string path) : _file(path), _path(path), _contents(), _pos()
 {
 }
 
-LinkedList<object_t*>* uScanner::Scan()
+LinkedList<uAbstractToken*>* uScanner::Scan()
 {
 	_pos = -1;
-	auto tokens = new LinkedList<object_t*>();
+	auto tokens = new LinkedList<uAbstractToken*>();
 	_file.Open(UTF8OpenMode::Read);
 	_contents = _file.ReadAll();
 	_file.Close();
@@ -272,7 +272,7 @@ LinkedList<object_t*>* uScanner::Scan()
 			}
 
 			std::wstring ident = ReadWString(identStart, identEnd - identStart);
-			auto token = CreateToken<std::wstring>(uScannerTokenType::StringLiteral, ident);
+			auto token = CreateToken<std::wstring>(uScannerTokenType::Identifier, ident);
 			tokens->AddItem(token);
 
 			/*Keyword keyword = GetKeyword(ident);
@@ -291,8 +291,8 @@ LinkedList<object_t*>* uScanner::Scan()
 
 			if (IsNumeric(chr) || (chr == L'.' && IsNumeric(nextChr)))
 			{
-				int64_t numStart = chr;
-				int64_t numEnd = chr + 1;
+				int64_t numStart = _pos;
+				int64_t numEnd = _pos + 1;
 				bool foundDot = false, foundExp = false, foundSign = false;
 
 				while (nextChr != L'\0')
@@ -359,6 +359,14 @@ LinkedList<object_t*>* uScanner::Scan()
 				else
 				{
 					auto intStr = ReadString(numStart, numEnd - numStart);
+					//std::cout << "Num Start: " << numStart << std::endl;
+					//std::cout << "Num End: " << numEnd << std::endl;
+					//std::cout << "Number: " << (_contents[numStart] & 0xFF) << std::endl;
+					//std::cout << intStr;
+					//std::cout << L'0' << std::endl;
+					//for (int64_t i = 0; i < _file.BufferSize(); ++i)
+						//std::cout << _contents[i] << std::endl;
+
 					int64_t intValue = std::stoll(intStr);
 					auto token = CreateToken<int64_t>(uScannerTokenType::IntLiteral, intValue);
 					tokens->AddItem(token);
@@ -372,7 +380,7 @@ LinkedList<object_t*>* uScanner::Scan()
 
 wchar_t uScanner::Peek(int64_t pos)
 {
-	int32_t newPos = _pos + pos + 1;
+	int64_t newPos = _pos + pos + 1;
 
 	if (newPos < _file.BufferSize())
 		return _contents[newPos];

@@ -36,6 +36,8 @@ public:
 	}
 	void AddItem(T item);
 	T RemoveFirstItem(T item);
+
+	LinkedListItem<T>* FirstItem();
 };
 
 template<typename T>
@@ -65,6 +67,12 @@ T LinkedList<T>::RemoveFirstItem(T item)
 	}
 
 	return value;
+}
+
+template<typename T>
+LinkedListItem<T>* LinkedList<T>::FirstItem()
+{
+	return this->_root;
 }
 
 #endif // _LINKEDLIST_h

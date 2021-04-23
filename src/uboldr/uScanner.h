@@ -3,7 +3,7 @@
 #ifndef _USCANNER_h
 #define _USCANNER_h
 
-#include "../utf8/UTF8File.hpp"
+#include "../utf8/UTF8File.h"
 #include "../collections/LinkedList.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
@@ -25,7 +25,7 @@ class uScanner
 
 public:
 	uScanner(std::string path);
-	LinkedList<object_t*>* Scan();
+	LinkedList<uAbstractToken*>* Scan();
 	wchar_t Peek(int64_t pos = 0);
 	wchar_t GetChar();
 	wchar_t GetNextChar();
@@ -41,15 +41,14 @@ public:
 	//template <typename T>
 	//uToken* CreateToken(uScannerTokenType type, T data);
 	template <typename T>
-	uToken<T, void>* CreateToken(uScannerTokenType scannerTokenType, T data);
+	uToken<T>* CreateToken(uScannerTokenType scannerTokenType, T data);
 };
 
 template<typename T>
-inline uToken<T, void>* uScanner::CreateToken(uScannerTokenType scannerTokenType, T data)
+inline uToken<T>* uScanner::CreateToken(uScannerTokenType scannerTokenType, T data)
 {
-	auto token = new uToken<T, void>();
-	token->type = scannerTokenType;
-	token->data = data;
+	auto token = new uToken<T>(data);
+	token->Type = scannerTokenType;
 
 	return token;
 };
