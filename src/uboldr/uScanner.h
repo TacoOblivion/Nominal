@@ -12,10 +12,14 @@ class uScanner
 {
 	std::string _path;
 	UTF8File _file;
-	int32_t _pos;
+	int64_t _pos;
+	int64_t _line = 0;
+	//int32_t scanChar = 0;
+	int64_t _lastNewLine = 0;
 	wchar_t* _contents;
 	const static int32_t KeywordCount = 5 * 5;
-	const std::string Keywords[KeywordCount]{
+	const std::string Keywords[KeywordCount]
+	{
 		"int8", "int16", "int32", "int64", "int128",
 		"uint8", "uint16", "uint32", "uint64", "uint128",
 		"float16", "float32", "float64", "float128", "string",
@@ -34,6 +38,7 @@ public:
 	inline bool IsAlpha(wchar_t chr);
 	inline bool IsNumeric(wchar_t chr);
 	inline bool IsAlphanumeric(wchar_t chr);
+	inline bool IsKeyword(std::wstring wstr);
 	std::string ReadString(int64_t startPos, int64_t length);
 	std::wstring ReadWString(int64_t startPos, int64_t length);
 	

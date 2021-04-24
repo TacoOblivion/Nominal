@@ -1,8 +1,9 @@
 
+#include "../basic/Comparisons.h"
 #include "uScanner.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
-#include "uTokenType.h"
+#include "uSymbolType.h"
 
 uScanner::uScanner(std::string path) : _file(path), _path(path), _contents(), _pos()
 {
@@ -33,14 +34,24 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 			if (peekOne == L'+')
 			{
 				// ++
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Increment);
+				tokens->AddItem(token);
+
+				++_pos;
 			}
 			else if (peekOne == L'=')
 			{
 				// +=
+				//TODO: Implement
+				++_pos;
 			}
 			else
 			{
 				// +
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Plus);
+				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'-')
@@ -50,31 +61,55 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 			if (peekOne == L'-')
 			{
 				// --
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Decrement);
+				tokens->AddItem(token);
+
+				++_pos;
 			}
 			else if (peekOne == L'=')
 			{
 				// -=
+				//TODO: Implement
+				++_pos;
 			}
 			else if (peekOne == L'>')
 			{
 				// ->
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::BitwiseImplication);
+				tokens->AddItem(token);
+
+				++_pos;
 			}
 			else
 			{
 				// -
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Minus);
+				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'*')
 		{
 			// *
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Asterisk);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'/')
 		{
 			// /
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Divide);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'%')
 		{
 			// %
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Percent);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'&')
 		{
@@ -83,14 +118,24 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 			if (peekOne == L'&')
 			{
 				// &&
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::BoolAnd);
+				tokens->AddItem(token);
+
+				++_pos;
 			}
 			else if (peekOne == L'=')
 			{
 				// &=
+				//TODO: Implement
+				++_pos;
 			}
 			else
 			{
 				// &
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Ampersand);
+				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'|')
@@ -100,14 +145,24 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 			if (peekOne == L'|')
 			{
 				// ||
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::BoolOr);
+				tokens->AddItem(token);
+
+				++_pos;
 			}
 			else if (peekOne == L'=')
 			{
 				// |=
+				//TODO: Implement
+				++_pos;
 			}
 			else
 			{
 				// |
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Pipe);
+				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'!')
@@ -121,10 +176,20 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				if (peekTwo == L'=')
 				{
 					// !==
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::NotIdenticalTo);
+					tokens->AddItem(token);
+
+					_pos += 2;
 				}
 				else
 				{
 					// !=
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::NotEqualTo);
+					tokens->AddItem(token);
+
+					++_pos;
 				}
 			}
 			else if (peekOne == L'>')
@@ -134,10 +199,20 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				if (peekTwo == L'=')
 				{
 					// !>=
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::LessThan);
+					tokens->AddItem(token);
+
+					_pos += 2;
 				}
 				else
 				{
 					// !>
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::LessThanEqual);
+					tokens->AddItem(token);
+
+					++_pos;
 				}
 			}
 			else if (peekOne == L'<')
@@ -147,10 +222,20 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				if (peekTwo == L'=')
 				{
 					// !<=
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::GreaterThan);
+					tokens->AddItem(token);
+
+					_pos += 2;
 				}
 				else
 				{
 					// !<
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::GreaterThanEqual);
+					tokens->AddItem(token);
+
+					++_pos;
 				}
 			}
 		}
@@ -165,27 +250,43 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				if (peekTwo == L'=')
 				{
 					// ===
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::IdenticalTo);
+					tokens->AddItem(token);
+
+					_pos += 2;
 				}
 				else
 				{
 					// ==
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::EqualTo);
+					tokens->AddItem(token);
+
+					++_pos;
 				}
 			}
 			else
 			{
 				// =
 
-				auto token = CreateToken<uParserTokenType>(uScannerTokenType::Symbol, uParserTokenType::Assignment);
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Equals);
 				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'~')
 		{
 			// ~
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Tilde);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'^')
 		{
 			// ^
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Circumflex);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'<')
 		{
@@ -194,14 +295,24 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 			if (peekOne == L'<')
 			{
 				// <<
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::BitwiseLeftShift);
+				tokens->AddItem(token);
+
+				++_pos;
 			}
 			else if (peekOne == L'=')
 			{
 				// <=
+				//TODO: Implement
+				++_pos;
 			}
 			else
 			{
 				// <
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::BitwiseLeftShift);
+				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'>')
@@ -215,44 +326,77 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				if (peekTwo == L'>')
 				{
 					// >>>
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::BitwiseRightShift);
+					tokens->AddItem(token);
+
+					_pos += 2;
 				}
 				else
 				{
 					// >>
+
+					auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::ArithmeticRightShift);
+					tokens->AddItem(token);
+
+					++_pos;
 				}
 			}
 			else if (peekOne == L'=')
 			{
 				// >=
+				//TODO: Implement
+				++_pos;
 			}
 			else
 			{
 				// >
+
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::GreaterThan);
+				tokens->AddItem(token);
 			}
 		}
 		else if (chr == L'(')
 		{
 			// (
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::ParanLeft);
+			tokens->AddItem(token);
 		}
 		else if (chr == L')')
 		{
 			// )
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::ParanRight);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'{')
 		{
 			// {
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::CurlyBraceLeft);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'}')
 		{
 			// }
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::CurlyBraceRight);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'[')
 		{
 			// [
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::SquareBracketLeft);
+			tokens->AddItem(token);
 		}
 		else if (chr == L']')
 		{
 			// ]
+
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::SquareBracketRight);
+			tokens->AddItem(token);
 		}
 		else if (chr == L'_' || IsAlpha(chr))
 		{
@@ -271,18 +415,12 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				chr = GetNextChar();
 			}
 
+			
 			std::wstring ident = ReadWString(identStart, identEnd - identStart);
-			auto token = CreateToken<std::wstring>(uScannerTokenType::Identifier, ident);
+			auto tokenType = IsKeyword(ident) ? uScannerTokenType::Keyword : uScannerTokenType::Identifier;
+			auto token = CreateToken<std::wstring>(tokenType, ident);
 			tokens->AddItem(token);
 
-			/*Keyword keyword = GetKeyword(ident);
-			if (keyword != null)
-				scanToken = CreateToken(eToken.Keyword, keyword.Name);
-			else
-				scanToken = CreateToken(eToken.Identifier, ident);
-
-			--scanDex;
-			*/
 			--_pos;
 		}
 		else if (IsNumeric(chr))
@@ -359,14 +497,6 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				else
 				{
 					auto intStr = ReadString(numStart, numEnd - numStart);
-					//std::cout << "Num Start: " << numStart << std::endl;
-					//std::cout << "Num End: " << numEnd << std::endl;
-					//std::cout << "Number: " << (_contents[numStart] & 0xFF) << std::endl;
-					//std::cout << intStr;
-					//std::cout << L'0' << std::endl;
-					//for (int64_t i = 0; i < _file.BufferSize(); ++i)
-						//std::cout << _contents[i] << std::endl;
-
 					int64_t intValue = std::stoll(intStr);
 					auto token = CreateToken<int64_t>(uScannerTokenType::IntLiteral, intValue);
 					tokens->AddItem(token);
@@ -413,6 +543,16 @@ inline bool uScanner::IsAlpha(wchar_t chr) { return IsUpperAlpha(chr) || IsLower
 inline bool uScanner::IsNumeric(wchar_t chr) { return chr >= L'0' && chr <= L'9'; }
 
 inline bool uScanner::IsAlphanumeric(wchar_t chr) { return IsAlpha(chr) || IsNumeric(chr); }
+
+//TODO: Implement a much, much, much faster version of this. At the moment, I just want it to work...
+inline bool uScanner::IsKeyword(std::wstring wstr)
+{
+	for (int32_t i = 0; i < KeywordCount; ++i)
+		if (WStrEqualsStr(wstr, Keywords[i]))
+			return true;
+
+	return false;
+}
 
 std::string uScanner::ReadString(int64_t startPos, int64_t length)
 {

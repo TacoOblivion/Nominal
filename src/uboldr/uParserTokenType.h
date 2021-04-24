@@ -49,13 +49,11 @@ enum class uParserTokenType : int32_t
 								// -5 % -3..0	r = 0 + ((-5 + 6) % 3) = 0 + (1 % 3) = 0 + 1 = 1
 								//				
 								// 9 % 4..7		r = 4 + (9 % 3) = 4 + 0 = 4
-	//Increment = 8,				// ++
 	PreIncrement = 8,			// ++	e.g. ++a
 	PostIncrement = 9,			// ++	e.g. a++
-	//Decrement = 10,				// --
 	PreDecrement = 10,			// --	e.g. --a
 	PostDecrement = 11,			// --	e.g. a--
-	ArithmeticRightShift = 12,	// >>>	e.g. -1 >>> 1	= 0x7FFFFFFF
+	ArithmeticRightShift = 12,	// >>	e.g. -1 >> 1	
 	// 
 
 	// Bool Operations (16-20)
@@ -86,7 +84,7 @@ enum class uParserTokenType : int32_t
 	BitwiseXor = 34,			// ^
 	BitwiseImplication = 35,	// ->
 	BitwiseLeftShift = 36,		// <<
-	BitwiseRightShift = 37,		// >>
+	BitwiseRightShift = 37,		// >>>
 
 	// ...
 	Assignment = 100,

@@ -14,7 +14,8 @@
 #include "src/collections/LinkedList.h"
 #include "src/uboldr/uScanner.h"
 #include "src/uboldr/uToken.h"
-#include "src/uboldr/uTokenType.h"
+#include "src/uboldr/uParserTokenType.h"
+#include "src/uboldr/uSymbolType.h"
 #include <iostream>
 
 using namespace std;
@@ -83,7 +84,7 @@ int main()
 		std::cout << (char)chr;
 	}*/
 
-	auto scanner = new uScanner("test2.ubr");
+	auto scanner = new uScanner("tests/other/test.ubr");
 	auto tokens = scanner->Scan();
 
 	auto listItem = tokens->FirstItem();
@@ -109,7 +110,7 @@ int main()
 			break;
 		case uScannerTokenType::Symbol:
 		{
-			auto token = dynamic_cast<uToken<uParserTokenType>*>(listItem->Value);
+			auto token = dynamic_cast<uToken<uSymbolType>*>(listItem->Value);
 			std::cout << ": " << (int32_t)token->Data;
 		}
 			break;
