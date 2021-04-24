@@ -34,6 +34,7 @@ enum class uSymbolType : int8_t
 	LessThanEqual,		// <=
 	// !< becomes >=
 	// !<= becomes >
+	NullCoalescing,		// ??
 
 	// Bitwise Operations
 	Ampersand,			// &
@@ -59,17 +60,20 @@ enum class uSymbolType : int8_t
 	BitwiseImplicationEquals,	// ->=
 	BitwiseLeftShiftEquals,		// <<=
 	BitwiseRightShiftEquals,	// >>>=
+	NullCoalescingEquals,		// ??=
 
 	// Grouping
-	ParanLeft,			// (
-	ParanRight,			// )
-	SquareBracketLeft,	// [
-	SquareBracketRight,	// ]
-	CurlyBraceLeft,		// {
-	CurlyBraceRight,	// }
+	ParanLeft,						// (
+	ParanRight,						// )
+	SquareBracketLeft,				// [
+	SquareBracketRight,				// ]
+	CurlyBraceLeft,					// {
+	CurlyBraceRight,				// }
+	NullCoalescingSquareBracket,	// ?[
 
 	// Access
-	Dot,				// .
+	Dot,					// .
+	NullCoalescingAccess,	// ?.
 	
 	// Range
 	Range,				// ..
