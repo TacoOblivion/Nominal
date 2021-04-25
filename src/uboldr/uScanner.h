@@ -3,15 +3,17 @@
 #ifndef _USCANNER_h
 #define _USCANNER_h
 
+#include "../basic/Conversions.h"
 #include "../utf8/UTF8File.h"
 #include "../collections/LinkedList.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
 #include "uSymbolType.h"
+#include <xstring>
 
 class uScanner
 {
-	std::string _path;
+	std::wstring _path;
 	UTF8File _file;
 	int64_t _pos;
 	int64_t _line = 0;
@@ -30,6 +32,7 @@ class uScanner
 
 public:
 	uScanner(std::string path);
+	uScanner(std::wstring path);
 	LinkedList<uAbstractToken*>* Scan();
 	wchar_t Peek(int64_t pos = 0);
 	wchar_t GetChar();

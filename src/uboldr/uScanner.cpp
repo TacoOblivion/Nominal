@@ -1,11 +1,16 @@
 
 #include "../basic/Comparisons.h"
+#include "../basic/Conversions.h"
 #include "uScanner.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
 #include "uSymbolType.h"
 
-uScanner::uScanner(std::string path) : _file(path), _path(path), _contents(), _pos()
+uScanner::uScanner(std::string path) : _file(path), _path(StrToWStr(path)), _contents(), _pos()
+{
+}
+
+uScanner::uScanner(std::wstring path) : _file(path), _path(path), _contents(), _pos()
 {
 }
 

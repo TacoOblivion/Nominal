@@ -1,17 +1,25 @@
 
 #include "UTF8File.h"
+#include "../basic/Conversions.h"
 
-UTF8File::UTF8File(const char* filePath)
+/*UTF8File::UTF8File(const char* filePath)
+{
+	this->_path = filePath;
+	_codeConverter = new std::codecvt_utf8<wchar_t>;
+}*/
+
+UTF8File::UTF8File(const std::string filePath)
+{
+	this->_path = StrToWStr(filePath);
+	_codeConverter = new std::codecvt_utf8<wchar_t>;
+}
+
+UTF8File::UTF8File(const std::wstring filePath)
 {
 	this->_path = filePath;
 	_codeConverter = new std::codecvt_utf8<wchar_t>;
 }
 
-UTF8File::UTF8File(const std::string& filePath)
-{
-	this->_path = filePath.c_str();
-	_codeConverter = new std::codecvt_utf8<wchar_t>;
-}
 
 UTF8File::~UTF8File()
 {

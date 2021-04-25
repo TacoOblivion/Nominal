@@ -17,7 +17,7 @@
 
 class UTF8File
 {
-	std::string _path;
+	std::wstring _path;
 	int64_t _bufferSize = 0;
 	std::wfstream _file;
 	std::codecvt_utf8<wchar_t>* _codeConverter;
@@ -25,8 +25,9 @@ class UTF8File
 	void _Open();
 	int64_t _GetFileBufferSize();
 public:
-	UTF8File(const char* filePath);
-	UTF8File(const std::string& filePath);
+	//UTF8File(const char* filePath);
+	UTF8File(const std::string filePath);
+	UTF8File(const std::wstring filePath);
 	~UTF8File();
 	UTF8File& Open(UTF8OpenMode mode);
 	void Close();
