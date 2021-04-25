@@ -404,6 +404,18 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 				tokens->AddItem(token);
 			}
 		}
+		else if (chr == L'?')
+		{
+			//TODO: Implement
+		}
+		else if (chr == L':')
+		{
+			//TODO: Implement
+		}
+		else if (chr == L';')
+		{
+			//TODO: Implement
+		}
 		// (
 		else if (chr == L'(')
 		{
@@ -440,6 +452,15 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::SquareBracketRight);
 			tokens->AddItem(token);
 		}
+		else if (chr == L'"')
+		{
+			//TODO: Implement Double Quoted Item
+		}
+		else if (chr == L'\'')
+		{
+			//TODO: Implement Single Quoted Item
+		}
+		// Keywords & Identifiers
 		else if (chr == L'_' || IsAlpha(chr))
 		{
 			int64_t identStart = _pos;
@@ -465,6 +486,7 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 
 			--_pos;
 		}
+		// Ints & Floats
 		else if (IsNumeric(chr))
 		{
 			auto nextChr = Peek();
@@ -616,4 +638,154 @@ std::wstring uScanner::ReadWString(int64_t startPos, int64_t length)
 		outStr.push_back(_contents[startPos + i]);
 
 	return outStr;
+}
+
+std::string uScanner::TokenTypeToString(uScannerTokenType type)
+{
+	switch (type)
+	{
+	case uScannerTokenType::Unknown:
+		return "Unknown";
+	case uScannerTokenType::IntLiteral:
+		return "Integer";
+	case uScannerTokenType::FloatLiteral:
+		return "Float";
+	case uScannerTokenType::StringLiteral:
+		return "String";
+	case uScannerTokenType::Identifier:
+		return "Identifier";
+	case uScannerTokenType::Keyword:
+		return "Keyword";
+	case uScannerTokenType::Symbol:
+		return "Symbol";
+	case uScannerTokenType::EoF:
+		return "EoF";
+	}
+
+	return "Error";
+}
+
+std::string uScanner::SymbolToString(uSymbolType symbol)
+{
+	switch (symbol)
+	{
+	case uSymbolType::Unknown:
+		return "Unknown";
+	case uSymbolType::Plus:
+		return "+";
+	case uSymbolType::Minus:
+		return "-";
+	case uSymbolType::Asterisk:
+		return "*";
+	case uSymbolType::Divide:
+		return "/";
+	case uSymbolType::Percent:
+		return "%";
+	case uSymbolType::Increment:
+		return "++";
+	case uSymbolType::Decrement:
+		return "--";
+	case uSymbolType::ArithmeticRightShift:
+		return ">>";
+	case uSymbolType::BoolAnd:
+		return "&&";
+	case uSymbolType::BoolOr:
+		return "||";
+	case uSymbolType::BoolNot:
+		return "!";
+	case uSymbolType::EqualTo:
+		return "==";
+	case uSymbolType::NotEqualTo:
+		return "!=";
+	case uSymbolType::IdenticalTo:
+		return "===";
+	case uSymbolType::NotIdenticalTo:
+		return "!==";
+	case uSymbolType::GreaterThan:
+		return ">";
+	case uSymbolType::GreaterThanEqual:
+		return ">=";
+	case uSymbolType::LessThan:
+		return "<";
+	case uSymbolType::LessThanEqual:
+		return "<=";
+	case uSymbolType::NullCoalescing:
+		return "??";
+	case uSymbolType::Ampersand:
+		return "&";
+	case uSymbolType::Pipe:
+		return "|";
+	case uSymbolType::Tilde:
+		return "~";
+	case uSymbolType::Circumflex:
+		return "^";
+	case uSymbolType::BitwiseImplication:
+		return "->";
+	case uSymbolType::BitwiseLeftShift:
+		return "<<";
+	case uSymbolType::BitwiseRightShift:
+		return ">>>";
+	case uSymbolType::Equals:
+		return "=";
+	case uSymbolType::PlusEquals:
+		return "+=";
+	case uSymbolType::MinusEquals:
+		return "-=";
+	case uSymbolType::TimesEquals:
+		return "*=";
+	case uSymbolType::DividedByEquals:
+		return "/=";
+	case uSymbolType::ModuloEquals:
+		return "%=";
+	case uSymbolType::ArithmeticRightShiftEquals:
+		return ">>=";
+	case uSymbolType::BitwiseAndEquals:
+		return "&=";
+	case uSymbolType::BitwiseOrEquals:
+		return "|=";
+	case uSymbolType::BitwiseNotEquals:
+		return "~=";
+	case uSymbolType::BitwiseXorEquals:
+		return "^=";
+	case uSymbolType::BitwiseImplicationEquals:
+		return "->=";
+	case uSymbolType::BitwiseLeftShiftEquals:
+		return "<<=";
+	case uSymbolType::BitwiseRightShiftEquals:
+		return ">>>=";
+	case uSymbolType::NullCoalescingEquals:
+		return "??=";
+	case uSymbolType::ParanLeft:
+		return "(";
+	case uSymbolType::ParanRight:
+		return ")";
+	case uSymbolType::SquareBracketLeft:
+		return "[";
+	case uSymbolType::SquareBracketRight:
+		return "]";
+	case uSymbolType::CurlyBraceLeft:
+		return "{";
+	case uSymbolType::CurlyBraceRight:
+		return "}";
+	case uSymbolType::NullCoalescingSquareBracket:
+		return "?[";
+	case uSymbolType::Dot:
+		return ".";
+	case uSymbolType::NullCoalescingAccess:
+		return "?.";
+	case uSymbolType::Range:
+		return "..";
+	case uSymbolType::Sharp:
+		return "#";
+	case uSymbolType::At:
+		return "@";
+	case uSymbolType::QuestionMark:
+		return "?";
+	case uSymbolType::Colon:
+		return ":";
+	case uSymbolType::SemiColon:
+		return ";";
+	}
+
+	return "Error";
 }

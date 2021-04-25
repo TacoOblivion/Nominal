@@ -83,4 +83,9 @@ enum class uSymbolType : int8_t
 
 	// Special Directive
 	At,					// @
+
+	// Ternary & Other
+	QuestionMark,		// ?
+	Colon,				// :
+	SemiColon,			// ;
 };

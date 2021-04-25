@@ -13,3 +13,4 @@ enum class uScannerTokenType : int8_t
 	Symbol = 5,
 	EoF = 6,
 };
+

@@ -84,13 +84,13 @@ int main()
 		std::cout << (char)chr;
 	}*/
 
-	auto scanner = new uScanner("tests/other/test.ubr");
+	auto scanner = new uScanner("tests/other/test2.ubr");
 	auto tokens = scanner->Scan();
 
 	auto listItem = tokens->FirstItem();
 	while (listItem != nullptr)
 	{
-		std::cout << static_cast<int32_t>(listItem->Value->Type);
+		std::cout << uScanner::TokenTypeToString(listItem->Value->Type);
 
 		switch (listItem->Value->Type)
 		{
@@ -111,7 +111,7 @@ int main()
 		case uScannerTokenType::Symbol:
 		{
 			auto token = dynamic_cast<uToken<uSymbolType>*>(listItem->Value);
-			std::cout << ": " << (int32_t)token->Data;
+			std::cout << ": " << uScanner::SymbolToString(token->Data);
 		}
 			break;
 		}

@@ -7,6 +7,7 @@
 #include "../collections/LinkedList.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
+#include "uSymbolType.h"
 
 class uScanner
 {
@@ -41,6 +42,9 @@ public:
 	inline bool IsKeyword(std::wstring wstr);
 	std::string ReadString(int64_t startPos, int64_t length);
 	std::wstring ReadWString(int64_t startPos, int64_t length);
+
+	static std::string TokenTypeToString(uScannerTokenType type);
+	static std::string SymbolToString(uSymbolType symbol);
 	
 	//uToken* CreateToken(uTokenType type);
 	//template <typename T>
@@ -54,6 +58,8 @@ inline uToken<T>* uScanner::CreateToken(uScannerTokenType scannerTokenType, T da
 {
 	auto token = new uToken<T>(data);
 	token->Type = scannerTokenType;
+	token->LineIndex = _line;
+	token->CharIndex = _pos - _lastNewLine;
 
 	return token;
 };
