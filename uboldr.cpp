@@ -10,13 +10,15 @@
 #include <cstdlib>
 */
 
-#include "src/utf8/UTF8File.h"
+#include "src/utf8/FileStream.h"
 #include "src/collections/LinkedList.h"
 #include "src/uboldr/uScanner.h"
 #include "src/uboldr/uToken.h"
 #include "src/uboldr/uParserTokenType.h"
 #include "src/uboldr/uSymbolType.h"
 #include <iostream>
+
+#include "src/utf8/file/File.h"
 
 using namespace std;
 
@@ -84,6 +86,9 @@ int main()
 		std::cout << (char)chr;
 	}*/
 
+	std::string a = "tests/other";
+	std::wstring b = StrToWStr(a);
+
 	auto scanner = new uScanner("tests/other/test2.ubr");
 	auto tokens = scanner->Scan();
 
@@ -120,7 +125,7 @@ int main()
 
 		listItem = listItem->NextItem;
 	}
-	
+
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	
 	/*auto test0 = new uToken<std::string, int32_t>();

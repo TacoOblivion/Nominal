@@ -13,9 +13,12 @@
 #include <ios>
 #include <iosfwd>
 //#include <bits/ios_base.h>
-#include "UTF8OpenMode.h"
+#include "OpenMode.h"
 
-class UTF8File
+namespace UTF8
+{
+
+class FileStream
 {
 	std::wstring _path;
 	int64_t _bufferSize = 0;
@@ -26,10 +29,10 @@ class UTF8File
 	int64_t _GetFileBufferSize();
 public:
 	//UTF8File(const char* filePath);
-	UTF8File(const std::string filePath);
-	UTF8File(const std::wstring filePath);
-	~UTF8File();
-	UTF8File& Open(UTF8OpenMode mode);
+	FileStream(const std::string filePath);
+	FileStream(const std::wstring filePath);
+	~FileStream();
+	FileStream& Open(UTF8::OpenMode mode);
 	void Close();
 
 	wchar_t* ReadAll();
@@ -48,5 +51,6 @@ public:
 	int64_t BufferSize() { return _bufferSize; }
 };
 
-#endif
+}
 
+#endif

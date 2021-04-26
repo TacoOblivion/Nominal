@@ -4,7 +4,7 @@
 #define _USCANNER_h
 
 #include "../basic/Conversions.h"
-#include "../utf8/UTF8File.h"
+#include "../utf8/FileStream.h"
 #include "../collections/LinkedList.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
@@ -14,7 +14,7 @@
 class uScanner
 {
 	std::wstring _path;
-	UTF8File _file;
+	UTF8::FileStream _file;
 	int64_t _pos;
 	int64_t _line = 0;
 	//int32_t scanChar = 0;

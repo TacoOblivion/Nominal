@@ -18,7 +18,7 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 {
 	_pos = -1;
 	auto tokens = new LinkedList<uAbstractToken*>();
-	_file.Open(UTF8OpenMode::Read);
+	_file.Open(UTF8::OpenMode::Read);
 	_contents = _file.ReadAll();
 	_file.Close();
 
