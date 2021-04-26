@@ -21,12 +21,11 @@ namespace UTF8
 class FileStream
 {
 	std::wstring _path;
-	int64_t _bufferSize = 0;
+	int64_t _size = 0;
 	std::wfstream _file;
 	std::codecvt_utf8<wchar_t>* _codeConverter;
 
 	void _Open();
-	int64_t _GetFileBufferSize();
 public:
 	//UTF8File(const char* filePath);
 	FileStream(const std::string filePath);
@@ -35,6 +34,7 @@ public:
 	FileStream& Open(UTF8::OpenMode mode);
 	void Close();
 
+	wchar_t ReadNext();
 	wchar_t* ReadAll();
 	//wchar_t* GetString(int64_t startPos, int64_t length);
 
@@ -48,7 +48,7 @@ public:
 		_file << data;
 	}
 
-	int64_t BufferSize() { return _bufferSize; }
+	int64_t Size() { return _size; }
 };
 
 }

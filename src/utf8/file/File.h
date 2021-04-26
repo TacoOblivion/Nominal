@@ -15,10 +15,10 @@
 
 namespace UTF8
 {
-	namespace File
-	{
-		bool Exists(std::wstring path);
-		int64_t Size(std::wstring path);
-		int64_t Size(std::string path);
-	}
+namespace File
+{
+	bool Exists(std::wstring path);
+	int64_t Size(std::wstring path);
+	int64_t Size(std::string path);
+}
 }
