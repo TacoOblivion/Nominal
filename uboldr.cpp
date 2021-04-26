@@ -14,10 +14,10 @@
 #include "src/collections/LinkedList.h"
 #include "src/uboldr/uScanner.h"
 #include "src/uboldr/uToken.h"
-#include "src/uboldr/uParserTokenType.h"
+#include "src/uboldr/uParserNodeType.h"
 #include "src/uboldr/uSymbolType.h"
 #include <iostream>
-
+#include "src/uboldr/uParser.h"
 #include "src/utf8/file/File.h"
 
 using namespace std;
@@ -86,42 +86,45 @@ int main()
 		std::cout << (char)chr;
 	}*/
 
-	auto scanner = new uScanner("tests/other/test2.ubr");
-	auto tokens = scanner->Scan();
+	//auto scanner = new uScanner("tests/other/test2.ubr");
+	//auto tokens = scanner->Scan();
 
-	auto listItem = tokens->FirstItem();
-	while (listItem != nullptr)
-	{
-		std::cout << uScanner::TokenTypeToString(listItem->Value->Type);
+	//auto listItem = tokens->FirstItem();
+	//while (listItem != nullptr)
+	//{
+	//	std::cout << uScanner::TokenTypeToString(listItem->Value->Type);
 
-		switch (listItem->Value->Type)
-		{
-		case uScannerTokenType::IntLiteral:
-		{
-			auto token = dynamic_cast<uToken<int64_t>*>(listItem->Value);
-			std::cout << ": " << token->Data;
-		}
-			break;
-		case uScannerTokenType::Identifier:
-		{
-			auto token = dynamic_cast<uToken<std::wstring>*>(listItem->Value);
-			std::cout << ": ";
-			for (wchar_t c : token->Data)
-				std::cout << (char)c;
-		}
-			break;
-		case uScannerTokenType::Symbol:
-		{
-			auto token = dynamic_cast<uToken<uSymbolType>*>(listItem->Value);
-			std::cout << ": " << uScanner::SymbolToString(token->Data);
-		}
-			break;
-		}
+	//	switch (listItem->Value->Type)
+	//	{
+	//	case uScannerTokenType::IntLiteral:
+	//	{
+	//		auto token = dynamic_cast<uToken<int64_t>*>(listItem->Value);
+	//		std::cout << ": " << token->Data;
+	//	}
+	//		break;
+	//	case uScannerTokenType::Identifier:
+	//	{
+	//		auto token = dynamic_cast<uToken<std::wstring>*>(listItem->Value);
+	//		std::cout << ": ";
+	//		for (wchar_t c : token->Data)
+	//			std::cout << (char)c;
+	//	}
+	//		break;
+	//	case uScannerTokenType::Symbol:
+	//	{
+	//		auto token = dynamic_cast<uToken<uSymbolType>*>(listItem->Value);
+	//		std::cout << ": " << uScanner::SymbolToString(token->Data);
+	//	}
+	//		break;
+	//	}
 
-		std::cout << std::endl;
+	//	std::cout << std::endl;
 
-		listItem = listItem->NextItem;
-	}
+	//	listItem = listItem->NextItem;
+	//}
+
+	auto parser = new uParser(L"tests/other/test2.ubr");
+	parser->Parse();
 
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	

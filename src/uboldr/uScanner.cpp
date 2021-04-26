@@ -581,7 +581,7 @@ wchar_t uScanner::Peek(int64_t pos)
 {
 	int64_t newPos = _pos + pos + 1;
 
-	if (newPos < _file.BufferSize())
+	if (newPos < _file.Size())
 		return _contents[newPos];
 
 	return L'\0';
@@ -589,7 +589,7 @@ wchar_t uScanner::Peek(int64_t pos)
 
 wchar_t uScanner::GetChar()
 {
-	if (_pos < _file.BufferSize())
+	if (_pos < _file.Size())
 		return _contents[_pos];
 
 	return L'\0';
@@ -597,7 +597,7 @@ wchar_t uScanner::GetChar()
 
 wchar_t uScanner::GetNextChar()
 {
-	if (++_pos < _file.BufferSize())
+	if (++_pos < _file.Size())
 		return _contents[_pos];
 
 	return L'\0';

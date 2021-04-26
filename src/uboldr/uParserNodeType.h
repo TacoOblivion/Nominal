@@ -22,7 +22,7 @@
 // push a - b;
 // a *= a + 5
 
-enum class uParserTokenType : int32_t
+enum class uParserNodeType : int32_t
 {
 	Unknown = 0,
 
@@ -70,12 +70,12 @@ enum class uParserTokenType : int32_t
 	NotIdenticalTo = 24,		// !==
 	GreaterThan = 25,			// >
 	GreaterThanEqual = 26,		// >=
-	NotGreaterThan = 28,		// !> same as <=
-	NotGreaterThanEqual = 27,	// !>= same as <
+	//NotGreaterThan = 28,		// !> same as <=
+	//NotGreaterThanEqual = 27,	// !>= same as <
 	LessThan = 27,				// <
 	LessThanEqual = 28,			// <=
-	NotLessThan = 26,			// !< same as >=
-	NotLessThanEqual = 25,		// !<= same as >
+	//NotLessThan = 26,			// !< same as >=
+	//NotLessThanEqual = 25,	// !<= same as >
 
 	// Bitwise Operations (31-40)
 	BitwiseAnd = 31,			// &
@@ -87,5 +87,8 @@ enum class uParserTokenType : int32_t
 	BitwiseRightShift = 37,		// >>>
 
 	// ...
+	Statement = 50,
+	Integer = 51,
+	Identifier = 52,
 	Assignment = 100,
 };

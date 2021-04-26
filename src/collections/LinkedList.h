@@ -35,9 +35,11 @@ public:
 
 	}
 	void AddItem(T item);
+	T RemoveFirstItem();
 	T RemoveFirstItem(T item);
 
 	LinkedListItem<T>* FirstItem();
+	bool IsEmpty() { return _root == nullptr; }
 };
 
 template<typename T>
@@ -52,6 +54,25 @@ void LinkedList<T>::AddItem(T item)
 }
 
 template<typename T>
+inline T LinkedList<T>::RemoveFirstItem()
+{
+	auto link = this->_root;
+	
+	T value = static_cast<T>(nullptr);// = this->_nullValue;
+	if (link != nullptr)
+	{
+		value = link->Value;
+
+		if (link == this->_root)
+			this->_root = link->NextItem;
+
+		delete link;
+	}
+
+	return value;
+}
+
+template<typename T>
 T LinkedList<T>::RemoveFirstItem(T item)
 {
 	LinkedListItem<T>* link = this->_root;
@@ -59,10 +80,14 @@ T LinkedList<T>::RemoveFirstItem(T item)
 	while (link != nullptr && link->Value != item)
 		link = link->NextItem;
 
-	T value = this->_nullValue;
+	T value = static_cast<T>(nullptr);// = this->_nullValue;
 	if (link != nullptr)
 	{
 		value = link->Value;
+		
+		if (link == this->_root)
+			this->_root = link->NextItem;
+
 		delete link;
 	}
 
