@@ -86,9 +86,6 @@ int main()
 		std::cout << (char)chr;
 	}*/
 
-	std::string a = "tests/other";
-	std::wstring b = StrToWStr(a);
-
 	auto scanner = new uScanner("tests/other/test2.ubr");
 	auto tokens = scanner->Scan();
 
