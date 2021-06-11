@@ -10,15 +10,20 @@
 #include <cstdlib>
 */
 
+//#if __cplusplus == 201703L
+//#error Alert
+//#endif
+
 #include "src/utf8/FileStream.h"
 #include "src/collections/LinkedList.h"
-#include "src/uboldr/uScanner.h"
-#include "src/uboldr/uToken.h"
-#include "src/uboldr/uParserNodeType.h"
-#include "src/uboldr/uSymbolType.h"
+#include "src/uboldr/lexer/uScanner.h"
+#include "src/uboldr/lexer/uToken.h"
+#include "src/uboldr/parser/uParserNodeType.h"
+#include "src/uboldr/lexer/uSymbolType.h"
 #include <iostream>
-#include "src/uboldr/uParser.h"
+#include "src/uboldr/parser/uParser.h"
 #include "src/utf8/file/File.h"
+#include <set>
 
 using namespace std;
 
@@ -42,8 +47,6 @@ using namespace std;
 // class, fn, function, extends, implements, interface, and, or, xor, if, else, while, for, loop, repeat, alias, yield
 // reserved types
 // int8, uint8, int16, uint16, int32, uint32, int64, uint64, string, array, float, double, char8, char16
-
-
 
 int main()
 {
@@ -125,6 +128,7 @@ int main()
 
 	auto parser = new uParser(L"tests/other/test2.ubr");
 	parser->Parse();
+	delete parser;
 
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	

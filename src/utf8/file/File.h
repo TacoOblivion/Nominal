@@ -1,9 +1,5 @@
 #pragma once
 
-#if __cplusplus == 201703L
-#error Boo
-#endif
-
 #include <iostream>
 #include <fstream>
 #include <string>

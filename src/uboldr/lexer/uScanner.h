@@ -3,9 +3,9 @@
 #ifndef _USCANNER_h
 #define _USCANNER_h
 
-#include "../basic/Conversions.h"
-#include "../utf8/FileStream.h"
-#include "../collections/LinkedList.h"
+#include "../../basic/Conversions.h"
+#include "../../utf8/FileStream.h"
+#include "../../collections/LinkedList.h"
 #include "uToken.h"
 #include "uScannerTokenType.h"
 #include "uSymbolType.h"

@@ -1,7 +1,12 @@
 #pragma once
 
-#include "../basic/Types.h"
+#include "../../basic/Types.h"
 #include "uScannerTokenType.h"
+
+// fwrd decl
+struct uAbstractToken;
+template <typename T>
+struct uToken;
 
 struct uAbstractToken : public object_t
 {
@@ -11,6 +16,9 @@ struct uAbstractToken : public object_t
 
 	uAbstractToken() {}
 	virtual ~uAbstractToken() {};
+
+	template <typename DT>
+	DT GetData() { return ((uToken<DT>*)this)->Data; }
 };
 
 template <typename T>
@@ -20,7 +28,15 @@ struct uToken : public uAbstractToken
 
 	uToken(T data) : Data(data) {}
 	virtual ~uToken() {};
+
+	T GetData();
 };
+
+template<typename T>
+inline T uToken<T>::GetData()
+{
+	return Data;
+}
 
 /*template <typename V>
 struct uStringToken : public uToken<std::string, V>
