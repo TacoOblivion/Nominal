@@ -3,8 +3,10 @@
 #include "../lexer/uScanner.h"
 #include "../../collections/LinkedList.h"
 
-void uParser::GetToken()
+void uParser::GetNextToken()
 {
+	if (!_tokens->IsEmpty())
+		std::cout << "Token Retrieved: " << (int32_t)_tokens->FirstItem()->Value->Type << std::endl;
 	_token = _tokens->IsEmpty() ? GetEoFToken() : _tokens->RemoveFirstItem();
 }
 
@@ -24,31 +26,49 @@ uAbstractToken* uParser::PeekToken()
 	return item != nullptr ? item->Value : GetEoFToken();
 }
 
-void uParser::Parse()
+uAbstractParserNode* uParser::Parse()
 {
 	_tokens = _lexer.Scan();
-	GetToken();
+	GetNextToken();
 
 	auto statementList = StatementList();
+	return statementList;
 }
 
-void uParser::Parse(LinkedList<uAbstractToken*>* lexerTokens)
+uAbstractParserNode* uParser::Parse(LinkedList<uAbstractToken*>* lexerTokens)
 {
-
+	return nullptr;
 }
 
 bool uParser::ExpectKeywordToken(const std::wstring ws)
 {
-	GetToken();
+	auto r = KeywordMatches(ws);
 
-	return KeywordMatches(ws);
+	if (!r)
+	{
+		std::cout << std::endl << "Expected Keyword \"";
+
+		for (int32_t i = 0; i < ws.length(); ++i)
+			std::cout << (char)ws[i];
+
+		std::cout << "\"" << std::endl;
+	}
+
+	GetNextToken();
+
+	return r;
 }
 
 bool uParser::ExpectSymbolToken(const uSymbolType symbol)
 {
-	GetToken();
+	auto r = SymbolMatches(symbol);
 
-	return SymbolMatches(symbol);
+	if (!r)
+		std::cout << "Expected Symbol " << (int32_t)(int8_t)symbol << std::endl;
+
+	GetNextToken();
+
+	return r;
 }
 
 bool uParser::KeywordMatches(const std::wstring ws)
@@ -70,22 +90,25 @@ bool uParser::InSymbolRange(const uSymbolType low, const uSymbolType high)
 	return symbol >= low && symbol <= high;
 }
 
-LinkedList<uAbstractParserNode*>* uParser::StatementList()
+uAbstractParserNode* uParser::StatementList()
 {
-	LinkedList<uAbstractParserNode*>* nodeList = new LinkedList<uAbstractParserNode*>();
+	auto node = new uParserNode<LinkedList<uAbstractParserNode*>*>();
+	node->Type = uParserNodeType::StatementList;
+	auto nodeList = new LinkedList<uAbstractParserNode*>();
 
 	while (_token->Type != uScannerTokenType::EoF)
 	{
-		auto node = Statement();
-		nodeList->AddItem(node);
+		auto stmtNode = Statement();
+		nodeList->AddItem(stmtNode);
 	}
 
-	return nodeList;
+	node->Data = nodeList;
+	return node;
 }
 
 uAbstractParserNode* uParser::Statement()
 {
-	uAbstractParserNode* node;
+	uAbstractParserNode* node = nullptr;
 	auto nextToken = PeekToken();
 
 	if (_token->Type == uScannerTokenType::Keyword)
@@ -129,12 +152,11 @@ uAbstractParserNode* uParser::IfStatement()
 {
 	// Expect: Keyword "if"
 	ExpectKeywordToken(L"if");
+	// Expect: Symbol (
+	ExpectSymbolToken(uSymbolType::ParanLeft);
 
 	auto node = new uAbstractParserNode();
 	node->Type = uParserNodeType::IfStatement;
-
-	// Expect: Symbol (
-	ExpectSymbolToken(uSymbolType::ParanLeft);
 
 	node->Left = Expression();
 
@@ -167,7 +189,7 @@ uAbstractParserNode* uParser::WhileStatement()
 	node->Type = uParserNodeType::WhileStatement;
 
 	// while
-	GetToken();
+	ExpectKeywordToken(L"while");
 
 	// check token == (
 	ExpectSymbolToken(uSymbolType::ParanLeft);
@@ -188,7 +210,7 @@ uAbstractParserNode* uParser::ForStatement()
 	node->Type = uParserNodeType::ForStatement;
 
 	// for
-	GetToken();
+	GetNextToken();
 
 	// check token == (
 	ExpectSymbolToken(uSymbolType::ParanLeft);
@@ -224,7 +246,7 @@ uAbstractParserNode* uParser::ForStatementListCondition()
 	node->Type = uParserNodeType::ForStatementListCondition;
 
 	// ;
-	GetToken();
+	GetNextToken();
 
 	node->Left = Expression();
 
@@ -242,7 +264,7 @@ uAbstractParserNode* uParser::ForStatementListLoopCounter()
 	node->Type = uParserNodeType::ForStatementListLoopCounter;
 
 	// ;
-	GetToken();
+	GetNextToken();
 
 	node->Left = Expression();
 
@@ -274,14 +296,14 @@ uAbstractParserNode* uParser::Block()
 	node->Type = uParserNodeType::StatementList;
 	node->Data = new LinkedList<uAbstractParserNode*>();
 
-	while (_token->Type != uScannerTokenType::EoF && !SymbolMatches(uSymbolType::CurlyBraceLeft))
+	while (_token->Type != uScannerTokenType::EoF && !SymbolMatches(uSymbolType::CurlyBraceRight))
 	{
 		auto statement = Statement();
-		node->Data->AddItem(node);
+		node->Data->AddItem(statement);
 	}
 
 	// Expect: Symbol }
-	GetToken();
+	ExpectSymbolToken(uSymbolType::CurlyBraceRight);
 
 	return node;
 }
@@ -289,7 +311,7 @@ uAbstractParserNode* uParser::Block()
 uAbstractParserNode* uParser::Expression()
 {
 	uAbstractParserNode* node = nullptr;
-	auto leftNode = Factor();
+	auto leftNode = ExprBoolOr();
 
 	if (SymbolMatches(uSymbolType::QuestionMark))
 	{
@@ -298,7 +320,7 @@ uAbstractParserNode* uParser::Expression()
 	}
 	else if (SymbolMatches(uSymbolType::Equals))
 	{
-		std::cout << "Assignment Succeeded";
+		std::cout << "Assignment" << std::endl;
 		node = Assignment();
 		node->Left = leftNode;
 	}
@@ -321,7 +343,7 @@ uAbstractParserNode* uParser::TernaryIfExpr()
 	node->Type = uParserNodeType::IfStatement;
 
 	// ?
-	GetToken();
+	GetNextToken();
 
 	node->Right = TernaryIfBlock();
 
@@ -348,7 +370,7 @@ uAbstractParserNode* uParser::Assignment()
 	node->Type = uParserNodeType::Assignment;
 
 	// ensure than symbol data == uSymbolType::Equals
-	GetToken();
+	GetNextToken();
 
 	node->Right = Expression();
 
@@ -384,7 +406,7 @@ uAbstractParserNode* uParser::ExprBoolOr()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BoolOr;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -415,7 +437,7 @@ uAbstractParserNode* uParser::ExprBoolAnd()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BoolAnd;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -446,7 +468,7 @@ uAbstractParserNode* uParser::ExprBitwiseOr()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BitwiseOr;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -477,7 +499,7 @@ uAbstractParserNode* uParser::ExprBitwiseXor()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BitwiseXor;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -508,7 +530,7 @@ uAbstractParserNode* uParser::ExprBitwiseAnd()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BitwiseAnd;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -537,27 +559,28 @@ uAbstractParserNode* uParser::ExprEquality()
 
 		if (SymbolMatches(uSymbolType::EqualTo))
 		{
+			std::cout << "EqualTo" << std::endl;
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::EqualTo;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::NotEqualTo))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::NotEqualTo;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::IdenticalTo))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::IdenticalTo;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::NotIdenticalTo))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::NotIdenticalTo;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -588,25 +611,25 @@ uAbstractParserNode* uParser::ExprRelational()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::GreaterThan;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::LessThan))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::LessThan;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::GreaterThanEqual))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::GreaterThanEqual;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::LessThanEqual))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::LessThanEqual;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -637,19 +660,19 @@ uAbstractParserNode* uParser::ExprBitShift()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BitwiseRightShift;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::BitwiseLeftShift))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BitwiseLeftShift;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::ArithmeticRightShift))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::ArithmeticRightShift;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -680,13 +703,13 @@ uAbstractParserNode* uParser::ExprMathAddSub()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::Add;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::Minus))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::Subtract;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -717,19 +740,19 @@ uAbstractParserNode* uParser::ExprMathMulDivMod()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::Multiply;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::Divide))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::Divide;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::Percent))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::Modulus;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -754,47 +777,47 @@ uAbstractParserNode* uParser::ExprPreUnary()
 	{
 		node = new uAbstractParserNode();
 		node->Type = uParserNodeType::Negate;
-		GetToken();
+		GetNextToken();
 		node->Left = ExprPreUnary();
 	}
 	else if (SymbolMatches(uSymbolType::BoolNot)) // should be ExclamationMark
 	{
 		node = new uAbstractParserNode();
 		node->Type = uParserNodeType::Negate;
-		GetToken();
+		GetNextToken();
 		node->Left = ExprPreUnary();
 	}
 	else if (SymbolMatches(uSymbolType::Tilde))
 	{
 		node = new uAbstractParserNode();
 		node->Type = uParserNodeType::BitwiseNot;
-		GetToken();
+		GetNextToken();
 		node->Left = ExprPreUnary();
 	}
 	else if (SymbolMatches(uSymbolType::Plus))
 	{
-		GetToken();
+		GetNextToken();
 		node = ExprPreUnary();
 	}
 	else if (SymbolMatches(uSymbolType::Ampersand))
 	{
 		node = new uAbstractParserNode();
 		node->Type = uParserNodeType::Reference;
-		GetToken();
+		GetNextToken();
 		node->Left = ExprPreUnary();
 	}
 	else if (SymbolMatches(uSymbolType::Increment))
 	{
 		node = new uAbstractParserNode();
 		node->Type = uParserNodeType::PreIncrement;
-		GetToken();
+		GetNextToken();
 		node->Left = ExprPreUnary();
 	}
 	else if (SymbolMatches(uSymbolType::Decrement))
 	{
 		node = new uAbstractParserNode();
 		node->Type = uParserNodeType::PreDecrement;
-		GetToken();
+		GetNextToken();
 		node->Left = ExprPreUnary();
 	}
 	else
@@ -819,13 +842,13 @@ uAbstractParserNode* uParser::ExprPostUnary()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::PostIncrement;
-			GetToken();
+			GetNextToken();
 		}
 		else if (SymbolMatches(uSymbolType::Decrement))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::PostDecrement;
-			GetToken();
+			GetNextToken();
 		}
 		else
 		{
@@ -855,25 +878,25 @@ uAbstractParserNode* uParser::ExprCallAndMemberAccess()
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::FnCall;
-			GetToken();
+			GetNextToken();
 			node->Right = ArgumentsList();
-			GetToken(); // )
+			GetNextToken(); // )
 		}
 		else if (SymbolMatches(uSymbolType::SquareBracketLeft))
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::BracketAccess;
-			GetToken();
+			GetNextToken();
 			node->Right = Expression();
-			GetToken(); // ]
+			GetNextToken(); // ]
 		}
 		else if (SymbolMatches(uSymbolType::Dot)) // should be Period
 		{
 			node = new uAbstractParserNode();
 			node->Type = uParserNodeType::MemberAccess;
-			GetToken();
+			GetNextToken();
 			node->Right = Factor();
-			GetToken(); // ]
+			GetNextToken(); // ]
 		}
 		else
 		{
@@ -890,30 +913,42 @@ uAbstractParserNode* uParser::ExprCallAndMemberAccess()
 	return node;
 }
 
+uAbstractParserNode* uParser::ArgumentsList()
+{
+	return nullptr;
+}
+
+uAbstractParserNode* uParser::FuncDecl()
+{
+	return nullptr;
+}
+
 uAbstractParserNode* uParser::Factor()
 {
 	uAbstractParserNode* node = nullptr;
 
 	if (_token->Type == uScannerTokenType::IntLiteral)
 	{
+		std::cout << "Integer" << std::endl;
 		auto node0 = new uParserNode<int64_t>();
 		node0->Type = uParserNodeType::Integer;
 		node0->Data = dynamic_cast<uToken<int64_t>*>(_token)->Data;
-		GetToken();
+		GetNextToken();
 		node = node0;
 	}
 	else if (_token->Type == uScannerTokenType::Identifier)
 	{
+		std::cout << "Identifier" << std::endl;
 		auto node0 = new uParserNode<std::wstring>();
 		node0->Type = uParserNodeType::Identifier;
 		node0->Data = dynamic_cast<uToken<std::wstring>*>(_token)->Data;
-		GetToken();
+		GetNextToken();
 		node = node0;
 	}
 	else
 	{
-		std::cout << "Error" << std::endl;
-		GetToken();
+		std::cout << "{Error}" << std::endl;
+		GetNextToken();
 	}
 
 	return node;

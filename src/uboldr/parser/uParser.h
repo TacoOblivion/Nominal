@@ -5,27 +5,7 @@
 #include "../lexer/uScanner.h"
 #include "../../basic/Types.h"
 #include "uParserNodeType.h"
-
-class uAbstractParserNode
-{
-public:
-	uAbstractParserNode* Parent = nullptr;
-	uAbstractParserNode* Left = nullptr;
-	uAbstractParserNode* Right = nullptr;
-
-	uParserNodeType Type = uParserNodeType::Unknown;
-	int64_t Flags = 0;
-
-	int64_t Line = 0;
-	int32_t Char = 0;
-};
-
-template <typename T>
-class uParserNode : public uAbstractParserNode
-{
-public:
-	T Data;
-};
+#include "uParserNode.h"
 
 class uParser
 {
@@ -39,11 +19,11 @@ public:
 	uParser(std::wstring path) : _lexer(path) {}
 	~uParser() {}
 
-	void GetToken();
+	void GetNextToken();
 	uAbstractToken* GetEoFToken();
 	uAbstractToken* PeekToken();
-	void Parse();
-	void Parse(LinkedList<uAbstractToken*>* lexerTokens);
+	uAbstractParserNode* Parse();
+	uAbstractParserNode* Parse(LinkedList<uAbstractToken*>* lexerTokens);
 
 	bool ExpectKeywordToken(const std::wstring ws);
 	bool ExpectSymbolToken(const uSymbolType symbol);
@@ -51,7 +31,7 @@ public:
 	bool SymbolMatches(const uSymbolType symbol);
 	bool InSymbolRange(const uSymbolType low, const uSymbolType high);
 
-	LinkedList<uAbstractParserNode*>* StatementList();
+	uAbstractParserNode* StatementList();
 
 	uAbstractParserNode* Statement();
 	uAbstractParserNode* IfStatement();
@@ -86,6 +66,7 @@ public:
 	uAbstractParserNode* ExprPreUnary();
 	uAbstractParserNode* ExprPostUnary();
 	uAbstractParserNode* ExprCallAndMemberAccess();
+	uAbstractParserNode* ArgumentsList();
 	uAbstractParserNode* FuncDecl();
 	uAbstractParserNode* Factor();
 };

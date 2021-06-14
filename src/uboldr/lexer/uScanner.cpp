@@ -415,14 +415,32 @@ LinkedList<uAbstractToken*>* uScanner::Scan()
 		else if (chr == L'?')
 		{
 			//TODO: Implement
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::QuestionMark);
+			tokens->AddItem(token);
 		}
 		else if (chr == L':')
 		{
 			//TODO: Implement
+			peekOne = Peek();
+
+			if (peekOne == L'=')
+			{
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::AutoType);
+				tokens->AddItem(token);
+
+				++_pos;
+			}
+			else
+			{
+				auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::Colon);
+				tokens->AddItem(token);
+			}
 		}
 		else if (chr == L';')
 		{
 			//TODO: Implement
+			auto token = CreateToken<uSymbolType>(uScannerTokenType::Symbol, uSymbolType::SemiColon);
+			tokens->AddItem(token);
 		}
 		// (
 		else if (chr == L'(')

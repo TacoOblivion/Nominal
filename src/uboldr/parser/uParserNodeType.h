@@ -91,12 +91,12 @@ enum class uParserNodeType : int32_t
 	Reference = 40,				// &a
 
 	// Parser Groups
-	Block = 45,
-	Integer = 46,
-	Float = 47,
-	Identifier = 48,
-	String = 49,
-	Null = 50,
+	Block = 44,
+	Integer = 45,
+	Float = 46,
+	Identifier = 47,
+	String = 48,
+	Null = 49,
 
 	// Precedence Top Precedence
 	StatementList = 50,

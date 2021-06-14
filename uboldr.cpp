@@ -127,8 +127,11 @@ int main()
 	//}
 
 	auto parser = new uParser(L"tests/other/test2.ubr");
-	parser->Parse();
+	auto node = parser->Parse();
 	delete parser;
+
+	std::cout << std::endl;
+	node->PrintDebug(0, 0);
 
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	

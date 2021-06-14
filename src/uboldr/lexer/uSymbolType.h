@@ -88,4 +88,5 @@ enum class uSymbolType : int8_t
 	QuestionMark,		// ?
 	Colon,				// :
 	SemiColon,			// ;
+	AutoType,			// :=
 };
