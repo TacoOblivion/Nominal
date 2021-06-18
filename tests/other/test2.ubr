@@ -1,9 +1,15 @@
-﻿heyEric = 0
-lookAtThis = 1
-a = 0
+﻿a = 0
 b = 10
-if (a != b)
-{
+if (a + 10 === b)
 	c = 0
+else if (m !> n)
+{
+	w = 2
+	q = 4 * MUM >> 1
 }
-
+else
+{
+	w = 3
+	q = 6 / MUM << 1
+}
+k = 5

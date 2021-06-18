@@ -109,7 +109,7 @@ uAbstractParserNode* uParser::StatementList()
 uAbstractParserNode* uParser::Statement()
 {
 	uAbstractParserNode* node = nullptr;
-	auto nextToken = PeekToken();
+	//auto nextToken = PeekToken();
 
 	if (_token->Type == uScannerTokenType::Keyword)
 	{
@@ -177,6 +177,8 @@ uAbstractParserNode* uParser::IfBlock()
 
 	if (KeywordMatches(L"else"))
 	{
+		GetNextToken();
+
 		node->Right = BlockOrStatement();
 	}
 
@@ -273,7 +275,7 @@ uAbstractParserNode* uParser::ForStatementListLoopCounter()
 
 uAbstractParserNode* uParser::BlockOrStatement()
 {
-	uAbstractParserNode* node;
+	uAbstractParserNode* node = nullptr;
 
 	if (SymbolMatches(uSymbolType::CurlyBraceLeft))
 	{
