@@ -92,17 +92,81 @@ bool uParser::InSymbolRange(const uSymbolType low, const uSymbolType high)
 
 uAbstractParserNode* uParser::StatementList()
 {
-	auto node = new uParserNode<LinkedList<uAbstractParserNode*>*>();
-	node->Type = uParserNodeType::StatementList;
+	auto node = new uGlobalParserStatementListNode();
 	auto nodeList = new LinkedList<uAbstractParserNode*>();
 
 	while (_token->Type != uScannerTokenType::EoF)
 	{
-		auto stmtNode = Statement();
-		nodeList->AddItem(stmtNode);
+		auto stmtNode = GlobalStatement();
+
+		if (stmtNode->Type == uParserNodeType::FnDef)
+		{
+			node->Funcs().AddItem((uFuncParserNode*)stmtNode);
+		}
+		else if (stmtNode->Type == uParserNodeType::ClassDef)
+		{
+			node->Classes().AddItem((uClassParserNode*)stmtNode);
+		}
+		else
+		{
+			nodeList->AddItem(stmtNode);
+		}
 	}
 
 	node->Data = nodeList;
+	return node;
+}
+
+uAbstractParserNode* uParser::GlobalStatement()
+{
+	uAbstractParserNode* node = nullptr;
+
+	if (KeywordMatches(L"fn"))
+	{
+		node = FuncDef();
+	}
+	else if (KeywordMatches(L"class"))
+	{
+		node = ClassDef();
+	}
+	else if (KeywordMatches(L"partial"))
+	{
+		node = ClassDef(true);
+	}
+	else
+	{
+		node = Statement();
+	}
+
+	return node;
+}
+
+
+uFuncParserNode* uParser::FuncDef()
+{
+	uFuncParserNode* node = new uFuncParserNode();
+
+	ExpectKeywordToken(L"fn");
+
+
+
+	return node;
+}
+
+
+uClassParserNode* uParser::ClassDef(bool partial)
+{
+	uClassParserNode* node = new uClassParserNode();
+
+
+	if (partial)
+	{
+		ExpectKeywordToken(L"partial");
+		node->PartialClass = true;
+	}
+
+	ExpectKeywordToken(L"class");
+
 	return node;
 }
 
@@ -126,10 +190,6 @@ uAbstractParserNode* uParser::Statement()
 		else if (token->Data == L"for")
 		{
 			node = ForStatement();
-		}
-		else if (token->Data == L"fn")
-		{
-			node = FuncDecl();
 		}
 		else if (token->Data == L"return")
 		{
@@ -916,11 +976,6 @@ uAbstractParserNode* uParser::ExprCallAndMemberAccess()
 }
 
 uAbstractParserNode* uParser::ArgumentsList()
-{
-	return nullptr;
-}
-
-uAbstractParserNode* uParser::FuncDecl()
 {
 	return nullptr;
 }

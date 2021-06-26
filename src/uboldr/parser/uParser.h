@@ -32,6 +32,10 @@ public:
 	bool InSymbolRange(const uSymbolType low, const uSymbolType high);
 
 	uAbstractParserNode* StatementList();
+	uAbstractParserNode* GlobalStatement();
+
+	uFuncParserNode* FuncDef();
+	uClassParserNode* ClassDef(bool partial = false);
 
 	uAbstractParserNode* Statement();
 	uAbstractParserNode* IfStatement();
@@ -67,6 +71,5 @@ public:
 	uAbstractParserNode* ExprPostUnary();
 	uAbstractParserNode* ExprCallAndMemberAccess();
 	uAbstractParserNode* ArgumentsList();
-	uAbstractParserNode* FuncDecl();
 	uAbstractParserNode* Factor();
 };

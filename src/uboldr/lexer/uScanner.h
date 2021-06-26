@@ -20,14 +20,16 @@ class uScanner
 	//int32_t scanChar = 0;
 	int64_t _lastNewLine = 0;
 	wchar_t* _contents;
-	const static int32_t KeywordCount = 5 * 5;
+	const static int32_t KeywordCount = 5 * 7;
 	const std::string Keywords[KeywordCount]
 	{
-		"int8", "int16", "int32", "int64", "int128",
+		"int8", "int16", "int32", "int64", "int128"
 		"uint8", "uint16", "uint32", "uint64", "uint128",
 		"float16", "float32", "float64", "float128", "string",
 		"var", "object", "", "", "",
-		"if", "else", "while", "for", "loop"
+		"if", "else", "while", "for", "loop",
+		"fn", "", "", "", ""
+		"partial", "class", "interface", "", ""
 	};
 
 public:

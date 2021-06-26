@@ -155,4 +155,7 @@ enum class uParserNodeType : int32_t
 	FnCall = 80,
 	BracketAccess = 81,
 	MemberAccess = 82,
+
+	FnDef = 90,
+	ClassDef = 91,
 };
