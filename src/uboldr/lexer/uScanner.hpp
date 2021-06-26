@@ -23,7 +23,7 @@ class uScanner
 	const static int32_t KeywordCount = 5 * 7;
 	const std::string Keywords[KeywordCount]
 	{
-		"int8", "int16", "int32", "int64", "int128"
+		"int8", "int16", "int32", "int64", "int128",
 		"uint8", "uint16", "uint32", "uint64", "uint128",
 		"float16", "float32", "float64", "float128", "string",
 		"var", "object", "", "", "",
