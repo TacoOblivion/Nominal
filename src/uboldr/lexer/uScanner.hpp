@@ -28,8 +28,8 @@ class uScanner
 		"float16", "float32", "float64", "float128", "string",
 		"var", "object", "", "", "",
 		"if", "else", "while", "for", "loop",
-		"fn", "", "", "", ""
-		"partial", "class", "interface", "", ""
+		"fn", "", "", "", "",
+		"partial", "class", "interface", "", "",
 	};
 
 public:
