@@ -16,12 +16,12 @@
 
 #include "src/utf8/FileStream.h"
 #include "src/collections/LinkedList.h"
-#include "src/uboldr/lexer/uScanner.h"
-#include "src/uboldr/lexer/uToken.h"
-#include "src/uboldr/parser/uParserNodeType.h"
-#include "src/uboldr/lexer/uSymbolType.h"
+#include "src/uboldr/lexer/uScanner.hpp"
+#include "src/uboldr/lexer/uToken.hpp"
+#include "src/uboldr/parser/uParserNodeType.hpp"
+#include "src/uboldr/lexer/uSymbolType.hpp"
 #include <iostream>
-#include "src/uboldr/parser/uParser.h"
+#include "src/uboldr/parser/uParser.hpp"
 #include "src/utf8/file/File.h"
 #include <set>
 
@@ -132,6 +132,7 @@ int main()
 
 	std::cout << std::endl;
 	node->PrintDebug(0, 0);
+	
 
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	

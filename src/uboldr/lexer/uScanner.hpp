@@ -6,9 +6,9 @@
 #include "../../basic/Conversions.h"
 #include "../../utf8/FileStream.h"
 #include "../../collections/LinkedList.h"
-#include "uToken.h"
-#include "uScannerTokenType.h"
-#include "uSymbolType.h"
+#include "uToken.hpp"
+#include "uScannerTokenType.hpp"
+#include "uSymbolType.hpp"
 #include <xstring>
 
 class uScanner

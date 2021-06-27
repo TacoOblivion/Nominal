@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../basic/Types.h"
-#include "uScannerTokenType.h"
+#include "uScannerTokenType.hpp"
 
 // fwrd decl
 struct uAbstractToken;
