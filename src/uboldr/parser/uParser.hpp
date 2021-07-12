@@ -31,7 +31,7 @@ public:
 	bool SymbolMatches(const uSymbolType symbol);
 	bool InSymbolRange(const uSymbolType low, const uSymbolType high);
 
-	uAbstractParserNode* StatementList();
+	uAbstractParserNode* GlobalStatementList();
 	uAbstractParserNode* GlobalStatement();
 
 	uFuncParserNode* FuncDef();

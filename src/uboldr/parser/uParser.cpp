@@ -1,6 +1,6 @@
 
-#include "uParser.h"
-#include "../lexer/uScanner.h"
+#include "uParser.hpp"
+#include "../lexer/uScanner.hpp"
 #include "../../collections/LinkedList.h"
 
 void uParser::GetNextToken()
@@ -31,7 +31,7 @@ uAbstractParserNode* uParser::Parse()
 	_tokens = _lexer.Scan();
 	GetNextToken();
 
-	auto statementList = StatementList();
+	auto statementList = GlobalStatementList();
 	return statementList;
 }
 
@@ -90,7 +90,7 @@ bool uParser::InSymbolRange(const uSymbolType low, const uSymbolType high)
 	return symbol >= low && symbol <= high;
 }
 
-uAbstractParserNode* uParser::StatementList()
+uAbstractParserNode* uParser::GlobalStatementList()
 {
 	auto node = new uGlobalParserStatementListNode();
 	auto nodeList = new LinkedList<uAbstractParserNode*>();
