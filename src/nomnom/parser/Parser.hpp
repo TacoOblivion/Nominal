@@ -1,17 +1,17 @@
 #pragma once
 
 #include "../../collections/LinkedList.h"
-#include "../lexer/uToken.hpp"
-#include "../lexer/uScanner.hpp"
+#include "../lexer/LexerToken.hpp"
+#include "../lexer/Lexer.hpp"
 #include "../../basic/Types.h"
-#include "uParserNodeType.hpp"
-#include "uParserNode.hpp"
+#include "ParserNodeType.hpp"
+#include "ParserNode.hpp"
 
 class uParser
 {
 	uScanner _lexer;
-	LinkedList<uAbstractToken*>* _tokens = nullptr;
-	uAbstractToken* _token = nullptr;
+	LinkedList<AbstractLexerToken*>* _tokens = nullptr;
+	AbstractLexerToken* _token = nullptr;
 	int64_t _errorCount = 0;
 
 
@@ -20,10 +20,10 @@ public:
 	~uParser() {}
 
 	void GetNextToken();
-	uAbstractToken* GetEoFToken();
-	uAbstractToken* PeekToken();
+	AbstractLexerToken* GetEoFToken();
+	AbstractLexerToken* PeekToken();
 	uAbstractParserNode* Parse();
-	uAbstractParserNode* Parse(LinkedList<uAbstractToken*>* lexerTokens);
+	uAbstractParserNode* Parse(LinkedList<AbstractLexerToken*>* lexerTokens);
 
 	bool ExpectKeywordToken(const std::wstring ws);
 	bool ExpectSymbolToken(const uSymbolType symbol);

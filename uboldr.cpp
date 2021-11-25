@@ -16,12 +16,12 @@
 
 #include "src/utf8/FileStream.h"
 #include "src/collections/LinkedList.h"
-#include "src/uboldr/lexer/uScanner.hpp"
-#include "src/uboldr/lexer/uToken.hpp"
-#include "src/uboldr/parser/uParserNodeType.hpp"
-#include "src/uboldr/lexer/uSymbolType.hpp"
+#include "src/nomnom/lexer/Lexer.hpp"
+#include "src/nomnom/lexer/LexerToken.hpp"
+#include "src/nomnom/parser/ParserNodeType.hpp"
+#include "src/nomnom/lexer/LexerSymbolType.hpp"
 #include <iostream>
-#include "src/uboldr/parser/uParser.hpp"
+#include "src/nomnom/parser/Parser.hpp"
 #include "src/utf8/file/File.h"
 #include <set>
 
@@ -126,14 +126,35 @@ int main()
 	//	listItem = listItem->NextItem;
 	//}
 
-	auto parser = new uParser(L"tests/other/test2.ubr");
+	auto parser = new Parser(L"tests/other/test2.ubr");
 	auto node = parser->Parse();
 	delete parser;
 
 	std::cout << std::endl;
 	node->PrintDebug(0, 0);
-	
 
+	/*std::string mm;
+	mm.push_back(0xE3);
+	mm.push_back(0x82);
+	mm.push_back(0xA2);
+
+	mm.push_back(0xE3);
+	mm.push_back(0x83);
+	mm.push_back(0x8B);
+
+	mm.push_back(0xE3);
+	mm.push_back(0x83);
+	mm.push_back(0xA1);
+
+	auto v = U"アニメ";
+
+	ofstream nn;
+	nn.open("test_write_utf8.txt", (std::ios_base::open_mode)UTF8::OpenMode::DefaultWrite);
+	nn.write(mm.c_str(), mm.size());
+	nn.close();
+	
+	std::cout << mm << std::endl;
+	*/
 	//int64_t* stack = (int64_t*)calloc(512, sizeof(int64_t));
 	
 	/*auto test0 = new uToken<std::string, int32_t>();

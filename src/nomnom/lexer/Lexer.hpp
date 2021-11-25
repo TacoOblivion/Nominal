@@ -6,9 +6,9 @@
 #include "../../basic/Conversions.h"
 #include "../../utf8/FileStream.h"
 #include "../../collections/LinkedList.h"
-#include "uToken.hpp"
-#include "uScannerTokenType.hpp"
-#include "uSymbolType.hpp"
+#include "LexerToken.hpp"
+#include "LexerTokenType.hpp"
+#include "LexerSymbolType.hpp"
 #include <xstring>
 
 class uScanner
@@ -38,7 +38,7 @@ class uScanner
 public:
 	uScanner(std::string path);
 	uScanner(std::wstring path);
-	LinkedList<uAbstractToken*>* Scan();
+	LinkedList<AbstractLexerToken*>* Scan();
 	wchar_t Peek(int64_t pos = 0);
 	wchar_t GetChar();
 	wchar_t GetNextChar();
@@ -54,17 +54,17 @@ public:
 	static std::string TokenTypeToString(uScannerTokenType type);
 	static std::string SymbolToString(uSymbolType symbol);
 	
-	//uToken* CreateToken(uTokenType type);
+	//LexerToken* CreateToken(uTokenType type);
 	//template <typename T>
-	//uToken* CreateToken(uScannerTokenType type, T data);
+	//LexerToken* CreateToken(uScannerTokenType type, T data);
 	template <typename T>
-	uToken<T>* CreateToken(uScannerTokenType scannerTokenType, T data);
+	LexerToken<T>* CreateToken(uScannerTokenType scannerTokenType, T data);
 };
 
 template<typename T>
-inline uToken<T>* uScanner::CreateToken(uScannerTokenType scannerTokenType, T data)
+inline LexerToken<T>* uScanner::CreateToken(uScannerTokenType scannerTokenType, T data)
 {
-	auto token = new uToken<T>(data);
+	auto token = new LexerToken<T>(data);
 	token->Type = scannerTokenType;
 	token->LineIndex = _line;
 	token->CharIndex = _pos - _lastNewLine;

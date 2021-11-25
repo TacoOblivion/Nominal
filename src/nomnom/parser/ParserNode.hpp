@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../../collections/LinkedList.h"
-#include "../lexer/uToken.hpp"
-#include "../lexer/uScanner.hpp"
+#include "../lexer/LexerToken.hpp"
+#include "../lexer/Lexer.hpp"
 #include "../../basic/Types.h"
-#include "uParserNodeType.hpp"
+#include "ParserNodeType.hpp"
 
 class uAbstractParserNode
 {

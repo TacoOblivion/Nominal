@@ -1,10 +1,10 @@
 
 #include "../../basic/Comparisons.h"
 #include "../../basic/Conversions.h"
-#include "uScanner.hpp"
-#include "uToken.hpp"
-#include "uScannerTokenType.hpp"
-#include "uSymbolType.hpp"
+#include "Lexer.hpp"
+#include "LexerToken.hpp"
+#include "LexerTokenType.hpp"
+#include "LexerSymbolType.hpp"
 
 uScanner::uScanner(std::string path) : _file(path), _path(StrToWStr(path)), _contents(), _pos()
 {
@@ -14,13 +14,13 @@ uScanner::uScanner(std::wstring path) : _file(path), _path(path), _contents(), _
 {
 }
 
-LinkedList<uAbstractToken*>* uScanner::Scan()
+LinkedList<AbstractLexerToken*>* uScanner::Scan()
 {
 	// Look at the size of this damn thing
 	// Alternative solution recommended for clean looks
 
 	_pos = -1;
-	auto tokens = new LinkedList<uAbstractToken*>();
+	auto tokens = new LinkedList<AbstractLexerToken*>();
 	_file.Open(UTF8::OpenMode::Read);
 	_contents = _file.ReadAll();
 	_file.Close();

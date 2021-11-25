@@ -1,6 +1,6 @@
 
-#include "uParser.hpp"
-#include "../lexer/uScanner.hpp"
+#include "Parser.hpp"
+#include "../lexer/Lexer.hpp"
 #include "../../collections/LinkedList.h"
 
 void uParser::GetNextToken()
@@ -10,14 +10,14 @@ void uParser::GetNextToken()
 	_token = _tokens->IsEmpty() ? GetEoFToken() : _tokens->RemoveFirstItem();
 }
 
-uAbstractToken* uParser::GetEoFToken()
+AbstractLexerToken* uParser::GetEoFToken()
 {
-	auto token = new uAbstractToken();
+	auto token = new AbstractLexerToken();
 	token->Type = uScannerTokenType::EoF;
 	return token;
 }
 
-uAbstractToken* uParser::PeekToken()
+AbstractLexerToken* uParser::PeekToken()
 {
 	if (_tokens->IsEmpty())
 		return GetEoFToken();
@@ -35,7 +35,7 @@ uAbstractParserNode* uParser::Parse()
 	return statementList;
 }
 
-uAbstractParserNode* uParser::Parse(LinkedList<uAbstractToken*>* lexerTokens)
+uAbstractParserNode* uParser::Parse(LinkedList<AbstractLexerToken*>* lexerTokens)
 {
 	return nullptr;
 }
@@ -177,7 +177,7 @@ uAbstractParserNode* uParser::Statement()
 
 	if (_token->Type == uScannerTokenType::Keyword)
 	{
-		auto token = dynamic_cast<uToken<std::wstring>*>(_token);
+		auto token = dynamic_cast<LexerToken<std::wstring>*>(_token);
 		
 		if (token->Data == L"if")
 		{
@@ -989,7 +989,7 @@ uAbstractParserNode* uParser::Factor()
 		std::cout << "Integer" << std::endl;
 		auto node0 = new uParserNode<int64_t>();
 		node0->Type = uParserNodeType::Integer;
-		node0->Data = dynamic_cast<uToken<int64_t>*>(_token)->Data;
+		node0->Data = dynamic_cast<LexerToken<int64_t>*>(_token)->Data;
 		GetNextToken();
 		node = node0;
 	}
@@ -998,7 +998,7 @@ uAbstractParserNode* uParser::Factor()
 		std::cout << "Identifier" << std::endl;
 		auto node0 = new uParserNode<std::wstring>();
 		node0->Type = uParserNodeType::Identifier;
-		node0->Data = dynamic_cast<uToken<std::wstring>*>(_token)->Data;
+		node0->Data = dynamic_cast<LexerToken<std::wstring>*>(_token)->Data;
 		GetNextToken();
 		node = node0;
 	}
